@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Portfolio Dashboard | Clarity PPM Intelligence</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f3460;
+            --success: #06D6A0;
+            --warning: #FFD23F;
+            --danger: #EF476F;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --background: #0a0a14;
+            --surface: #1a1a2e;
+            --border: #2a2a3e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(15, 52, 96, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(239, 71, 111, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(6, 214, 160, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -30px) scale(1.05); }
+            66% { transform: translate(-30px, 50px) scale(0.95); }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 40px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Executive Header */
+        .executive-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .executive-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 500px;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300"><path d="M0,100 Q125,50 250,100 T500,100 L500,300 L0,300 Z" fill="%23ffffff" opacity="0.03"/><circle cx="400" cy="80" r="60" fill="%23ffffff" opacity="0.05"/><circle cx="450" cy="150" r="40" fill="%23ffffff" opacity="0.05"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: 32px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Load Section */
+        .load-section {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 48px;
+            margin-bottom: 32px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .load-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            opacity: 0.6;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .load-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .load-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .file-upload-button {
+            background: linear-gradient(135deg, var(--success) 0%, #04AA7D 100%);
+            color: white;
+            padding: 16px 48px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(6, 214, 160, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-upload-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(6, 214, 160, 0.4);
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success), var(--warning));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+            font-size: 42px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .kpi-detail {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        .status-green { background: var(--success); }
+        .status-yellow { background: var(--warning); }
+        .status-red { background: var(--danger); }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-badge {
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--success);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Executive Summary */
+        .executive-summary {
+            background: linear-gradient(135deg, rgba(6, 214, 160, 0.1) 0%, rgba(15, 52, 96, 0.1) 100%);
+            border: 1px solid rgba(6, 214, 160, 0.2);
+            padding: 28px;
+            border-radius: 16px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 28px;
+        }
+
+        /* Health Dimensions Grid */
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .dimension-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .dimension-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .dimension-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .dimension-status {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .dimension-metric {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Concerns Section */
+        .concern-item {
+            background: rgba(239, 71, 111, 0.05);
+            border-left: 4px solid var(--danger);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .concern-item.warning {
+            background: rgba(255, 210, 63, 0.05);
+            border-left-color: var(--warning);
+        }
+
+        .concern-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .concern-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .severity-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .severity-critical {
+            background: rgba(239, 71, 111, 0.2);
+            color: var(--danger);
+        }
+
+        .severity-high {
+            background: rgba(255, 210, 63, 0.2);
+            color: var(--warning);
+        }
+
+        .concern-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .concern-action {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Projects Table */
+        .projects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .projects-table thead th {
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .projects-table tbody td {
+            padding: 20px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .projects-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .projects-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .project-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .project-code {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'Inter', monospace;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-on-track {
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--success);
+        }
+
+        .status-at-risk {
+            background: rgba(255, 210, 63, 0.15);
+            color: var(--warning);
+        }
+
+        .status-critical {
+            background: rgba(239, 71, 111, 0.15);
+            color: var(--danger);
+        }
+
+        .health-score {
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .health-high { color: var(--success); }
+        .health-medium { color: var(--warning); }
+        .health-low { color: var(--danger); }
+
+        .metric-cell {
+            font-family: 'Inter', monospace;
+            font-size: 13px;
+        }
+
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--success);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Recommendations */
+        .recommendation-item {
+            background: rgba(6, 214, 160, 0.05);
+            border-left: 4px solid var(--success);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .recommendation-priority {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--success);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 14px;
+            line-height: 28px;
+            text-align: center;
+            margin-right: 12px;
+        }
+
+        .recommendation-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendation-timeline {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--success);
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const ExecutiveDashboard = () => {
+            const [reportData, setReportData] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const chartsRef = useRef({});
+
+            const handleFileUpload = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    setLoading(true);
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            setReportData(data);
+                            setLoading(false);
+                            setTimeout(() => renderCharts(data), 100);
+                        } catch (error) {
+                            console.error('Error parsing JSON:', error);
+                            alert('Error loading file. Please ensure it\'s a valid JSON report.');
+                            setLoading(false);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+
+            const renderCharts = (data) => {
+                // Status Distribution Chart
+                const statusCtx = document.getElementById('statusChart');
+                if (statusCtx && data.portfolio_summary) {
+                    if (chartsRef.current.status) chartsRef.current.status.destroy();
+                    chartsRef.current.status = new Chart(statusCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['On Track', 'At Risk', 'Critical'],
+                            datasets: [{
+                                data: [
+                                    data.portfolio_summary.status_distribution.on_track,
+                                    data.portfolio_summary.status_distribution.at_risk,
+                                    data.portfolio_summary.status_distribution.critical
+                                ],
+                                backgroundColor: ['#06D6A0', '#FFD23F', '#EF476F'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: '#a0a0a0' }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Project Health Scores Chart
+                const healthCtx = document.getElementById('healthChart');
+                if (healthCtx && data.projects) {
+                    if (chartsRef.current.health) chartsRef.current.health.destroy();
+                    const projects = data.projects.slice(0, 10);
+                    chartsRef.current.health = new Chart(healthCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: projects.map(p => p.name.substring(0, 20)),
+                            datasets: [{
+                                label: 'Health Score',
+                                data: projects.map(p => p.health.health_score),
+                                backgroundColor: projects.map(p =>
+                                    p.health.health_score >= 80 ? '#06D6A0' :
+                                    p.health.health_score >= 60 ? '#FFD23F' : '#EF476F'
+                                ),
+                                borderRadius: 8,
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                    ticks: { color: '#a0a0a0' }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: '#a0a0a0' }
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+
+            const formatCurrency = (value) => {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(value);
+            };
+
+            const formatDate = (dateString) => {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
+            if (loading) {
+                return (
+                    <div className="app-container">
+                        <div className="loading">
+                            <div className="loading-spinner"></div>
+                            <div style={{ fontSize: '18px', color: '#a0a0a0' }}>
+                                Loading executive report...
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (!reportData) {
+                return (
+                    <div className="app-container">
+                        <div className="executive-header">
+                            <div className="header-content">
+                                <div className="header-title">Executive Portfolio Dashboard</div>
+                                <div className="header-subtitle">
+                                    AI-Powered Clarity PPM Intelligence • Real-Time Project Health Monitoring
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="load-section">
+                            <div className="load-icon">📊</div>
+                            <div className="load-title">Load Weekly Executive Report</div>
+                            <div className="load-description">
+                                Upload the JSON report generated by Claude Desktop automation to view comprehensive 
+                                portfolio health analysis across scope, budget, and timeline dimensions.
+                            </div>
+                            <label htmlFor="file-upload" className="file-upload-button">
+                                <span>📁</span>
+                                <span>Choose Report File</span>
+                            </label>
+                            <input
+                                id="file-upload"
+                                type="file"
+                                accept=".json"
+                                onChange={handleFileUpload}
+                                style={{ display: 'none' }}
+                            />
+                        </div>
+                    </div>
+                );
+            }
+
+            const { metadata, portfolio_summary, portfolio_health, insights, projects } = reportData;
+
+            return (
+                <div className="app-container fade-in">
+                    <div className="executive-header">
+                        <div className="header-content">
+                            <div className="header-title">Executive Portfolio Dashboard</div>
+                            <div className="header-subtitle">{metadata.report_type}</div>
+                            <div className="header-meta">
+                                <div className="meta-item">
+                                    <div className="meta-label">Reporting Period</div>
+                                    <div className="meta-value">{metadata.reporting_period}</div>
+                                </div>
+                                <div className="meta-item">
+                                    <div className="meta-label">Generated</div>
+                                    <div className="meta-value">{formatDate(metadata.generated_at)}</div>
+                                </div>
+                                <div className="meta-item">
+                                    <div className="meta-label">Data Source</div>
+                                    <div className="meta-value">{metadata.data_source}</div>
+                                </div>
+                                <div className="meta-item">
+                                    <div className="meta-label">Automation</div>
+                                    <div className="meta-value">{metadata.generated_by}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* KPI Grid */}
+                    <div className="kpi-grid">
+                        <div className="kpi-card">
+                            <div className="kpi-label">Total Projects</div>
+                            <div className="kpi-value">{portfolio_summary.total_projects}</div>
+                            <div className="kpi-detail">
+                                <span className="status-indicator status-green"></span>
+                                {portfolio_summary.status_distribution.on_track} On Track
+                                <span className="status-indicator status-yellow" style={{marginLeft: '8px'}}></span>
+                                {portfolio_summary.status_distribution.at_risk} At Risk
+                                <span className="status-indicator status-red" style={{marginLeft: '8px'}}></span>
+                                {portfolio_summary.status_distribution.critical} Critical
+                            </div>
+                        </div>
+
+                        <div className="kpi-card">
+                            <div className="kpi-label">Portfolio Budget</div>
+                            <div className="kpi-value">{formatCurrency(portfolio_summary.budget.total)}</div>
+                            <div className="kpi-detail">
+                                {formatCurrency(portfolio_summary.budget.spent)} spent • 
+                                {portfolio_summary.budget.utilization_percentage.toFixed(1)}% utilized
+                            </div>
+                        </div>
+
+                        <div className="kpi-card">
+                            <div className="kpi-label">Health Score</div>
+                            <div className="kpi-value">{portfolio_summary.average_health_score}</div>
+                            <div className="kpi-detail">
+                                {portfolio_summary.average_completion.toFixed(0)}% average completion
+                            </div>
+                        </div>
+
+                        <div className="kpi-card">
+                            <div className="kpi-label">Active Risks</div>
+                            <div className="kpi-value">{portfolio_summary.total_risks}</div>
+                            <div className="kpi-detail" style={{color: '#EF476F'}}>
+                                {portfolio_summary.critical_risks} critical risks identified
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="content-grid">
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">
+                                    <span>🎯</span>
+                                    <span>Executive Summary</span>
+                                </div>
+                            </div>
+                            <div className="executive-summary">
+                                {insights.executive_summary}
+                            </div>
+
+                            {/* Health Dimensions */}
+                            <div style={{marginBottom: '28px'}}>
+                                <div style={{fontSize: '18px', fontWeight: '700', marginBottom: '16px', fontFamily: 'Playfair Display'}}>
+                                    Portfolio Health Dimensions
+                                </div>
+                                <div className="dimensions-grid">
+                                    <div className="dimension-card">
+                                        <div className="dimension-icon">📐</div>
+                                        <div className="dimension-label">Scope</div>
+                                        <div className="dimension-status">
+                                            {insights.scope_analysis.projects_with_issues.length === 0 ? '✓ Healthy' : '⚠ Attention'}
+                                        </div>
+                                        <div className="dimension-metric">
+                                            {insights.scope_analysis.average_variance.toFixed(1)}% avg variance
+                                        </div>
+                                    </div>
+                                    <div className="dimension-card">
+                                        <div className="dimension-icon">💰</div>
+                                        <div className="dimension-label">Budget</div>
+                                        <div className="dimension-status">
+                                            {portfolio_health.budget.projects_over_budget === 0 ? '✓ On Track' : '⚠ Over Budget'}
+                                        </div>
+                                        <div className="dimension-metric">
+                                            {formatCurrency(portfolio_health.budget.total_variance)} variance
+                                        </div>
+                                    </div>
+                                    <div className="dimension-card">
+                                        <div className="dimension-icon">⏱</div>
+                                        <div className="dimension-label">Timeline</div>
+                                        <div className="dimension-status">
+                                            {portfolio_health.schedule.projects_behind === 0 ? '✓ On Schedule' : '⚠ Delayed'}
+                                        </div>
+                                        <div className="dimension-metric">
+                                            {portfolio_health.schedule.average_variance_days.toFixed(1)} days avg variance
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="chart-container">
+                                <canvas id="healthChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">
+                                    <span>🤖</span>
+                                    <span>AI Insights</span>
+                                </div>
+                                <div className="card-badge">Claude Analysis</div>
+                            </div>
+                            <div className="chart-container" style={{height: '200px', marginBottom: '24px'}}>
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                            
+                            <div style={{fontSize: '14px', color: '#a0a0a0', textAlign: 'center', marginTop: '16px'}}>
+                                Portfolio Status Distribution
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Key Concerns */}
+                    <div className="content-grid">
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">
+                                    <span>🚨</span>
+                                    <span>Key Concerns</span>
+                                </div>
+                            </div>
+                            {insights.key_concerns.map((concern, idx) => (
+                                <div key={idx} className={`concern-item ${concern.severity === 'High' ? 'warning' : ''}`}>
+                                    <div className="concern-header">
+                                        <div className="concern-title">{concern.concern}</div>
+                                        <div className={`severity-badge severity-${concern.severity.toLowerCase()}`}>
+                                            {concern.severity}
+                                        </div>
+                                    </div>
+                                    <div className="concern-details">{concern.details}</div>
+                                    <div className="concern-action">
+                                        <span>→</span>
+                                        <span>{concern.action}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">
+                                    <span>💡</span>
+                                    <span>Recommendations</span>
+                                </div>
+                            </div>
+                            {insights.recommendations.map((rec, idx) => (
+                                <div key={idx} className="recommendation-item">
+                                    <div className="recommendation-title">
+                                        <span className="recommendation-priority">{rec.priority}</span>
+                                        <span>{rec.recommendation}</span>
+                                        <span className="recommendation-timeline">{rec.timeline}</span>
+                                    </div>
+                                    <div style={{fontSize: '14px', color: '#a0a0a0', marginBottom: '12px'}}>
+                                        {rec.rationale}
+                                    </div>
+                                    <div style={{fontSize: '13px', color: '#06D6A0'}}>
+                                        {rec.actions && rec.actions.map((action, i) => (
+                                            <div key={i} style={{marginBottom: '4px'}}>→ {action}</div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Projects Table */}
+                    <div className="card">
+                        <div className="card-header">
+                            <div className="card-title">
+                                <span>📁</span>
+                                <span>Project Portfolio ({projects.length} Projects)</span>
+                            </div>
+                        </div>
+                        <div style={{overflowX: 'auto'}}>
+                            <table className="projects-table">
+                                <thead>
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>Status</th>
+                                        <th>Health</th>
+                                        <th>Scope</th>
+                                        <th>Budget</th>
+                                        <th>Timeline</th>
+                                        <th>Risks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {projects.map((project, idx) => (
+                                        <tr key={idx}>
+                                            <td>
+                                                <div className="project-name">{project.name}</div>
+                                                <div className="project-code">{project.code}</div>
+                                            </td>
+                                            <td>
+                                                <span className={`status-badge status-${project.health.overall_status.toLowerCase().replace(' ', '-')}`}>
+                                                    {project.health.overall_status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div className={`health-score health-${
+                                                    project.health.health_score >= 80 ? 'high' :
+                                                    project.health.health_score >= 60 ? 'medium' : 'low'
+                                                }`}>
+                                                    {project.health.health_score}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="metric-cell">
+                                                    <span className={`status-indicator status-${
+                                                        project.health.scope_status.toLowerCase()
+                                                    }`}></span>
+                                                    {project.scope.scope_variance_percentage.toFixed(1)}%
+                                                </div>
+                                                <div style={{fontSize: '11px', color: '#666'}}>
+                                                    {project.scope.scope_changes} changes
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="metric-cell">
+                                                    <span className={`status-indicator status-${
+                                                        project.health.budget_status.toLowerCase()
+                                                    }`}></span>
+                                                    {formatCurrency(project.budget.spent)}
+                                                </div>
+                                                <div style={{fontSize: '11px', color: '#666'}}>
+                                                    of {formatCurrency(project.budget.total)}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="metric-cell">
+                                                    <span className={`status-indicator status-${
+                                                        project.health.schedule_status.toLowerCase()
+                                                    }`}></span>
+                                                    {project.schedule.percent_complete}%
+                                                </div>
+                                                <div style={{fontSize: '11px', color: '#666'}}>
+                                                    {project.schedule.variance_days >= 0 ? '+' : ''}{project.schedule.variance_days}d
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>{project.risks.total} total</div>
+                                                {project.risks.critical > 0 && (
+                                                    <div style={{fontSize: '11px', color: '#EF476F', fontWeight: '600'}}>
+                                                        {project.risks.critical} critical
+                                                    </div>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<ExecutiveDashboard />, document.getElementById('root'));
+    </script>
+</body>
+</html>

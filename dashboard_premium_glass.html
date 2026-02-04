@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Intelligence Dashboard</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Neon Accents */
+            --neon-purple: #9b5cff;
+            --neon-pink: #ff006e;
+            --neon-cyan: #00f5ff;
+            
+            /* Background */
+            --bg-deep: #0a0515;
+            --bg-mid: #130a2e;
+            --bg-light: #1e1040;
+            
+            /* Text */
+            --text-primary: #ffffff;
+            --text-secondary: #b8a7d9;
+            --text-muted: #6b5a8e;
+            
+            /* Surface */
+            --surface-bg: rgba(255, 255, 255, 0.06);
+            --surface-border: rgba(255, 255, 255, 0.12);
+            --surface-glow: rgba(155, 92, 255, 0.45);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0515 0%, #1e1040 50%, #130a2e 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(155, 92, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 110, 0.12) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Core Surface Style */
+        .surface {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 18px;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.10);
+        }
+
+        .glow-purple {
+            box-shadow: 
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                0 0 18px rgba(155, 92, 255, 0.45);
+        }
+
+        .glow-pink {
+            box-shadow: 
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                0 0 18px rgba(255, 0, 110, 0.45);
+        }
+
+        /* App Shell */
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            width: 80px;
+            background: rgba(255, 255, 255, 0.04);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            gap: 24px;
+        }
+
+        .sidebar-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sidebar-icon:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .sidebar-icon.active {
+            background: rgba(155, 92, 255, 0.15);
+            border-color: rgba(155, 92, 255, 0.4);
+            box-shadow: 0 0 18px rgba(155, 92, 255, 0.45);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Utility Bar */
+        .top-bar {
+            height: 72px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            gap: 24px;
+        }
+
+        .search-input {
+            flex: 1;
+            max-width: 480px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 0 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(155, 92, 255, 0.5);
+            box-shadow: 0 0 12px rgba(155, 92, 255, 0.25);
+        }
+
+        .utility-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .utility-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .utility-icon:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Canvas Area */
+        .canvas {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        /* Tile Grid System */
+        .tile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .tile-grid-2 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1200px) {
+            .tile-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Metric Tile */
+        .metric-tile {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(18px);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.10);
+            transition: all 0.4s ease;
+            animation: fadeIn 0.6s ease-out both;
+        }
+
+        .metric-tile:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .metric-detail {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Info Tile (Highlight with gradient) */
+        .info-tile {
+            background: linear-gradient(135deg, rgba(155, 92, 255, 0.2) 0%, rgba(255, 0, 110, 0.15) 100%);
+            border: 1px solid rgba(155, 92, 255, 0.3);
+            backdrop-filter: blur(18px);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                0 0 24px rgba(155, 92, 255, 0.3);
+        }
+
+        .info-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .info-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Chart Tile */
+        .chart-tile {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(18px);
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.10);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .chart-tab {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .chart-tab.active {
+            background: rgba(155, 92, 255, 0.2);
+            color: white;
+            box-shadow: 0 0 12px rgba(155, 92, 255, 0.3);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
+
+        /* Progress Tile (Ring/Donut) */
+        .progress-tile {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(18px);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.10);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* List Tile */
+        .list-tile {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(18px);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.10);
+        }
+
+        .list-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .list-item {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(4px);
+        }
+
+        .list-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .list-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .list-item-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-critical {
+            background: rgba(255, 0, 110, 0.2);
+            color: #ff4d9f;
+            border: 1px solid rgba(255, 0, 110, 0.3);
+        }
+
+        .badge-warning {
+            background: rgba(255, 200, 0, 0.2);
+            color: #ffd966;
+            border: 1px solid rgba(255, 200, 0, 0.3);
+        }
+
+        .badge-success {
+            background: rgba(0, 245, 255, 0.2);
+            color: #66f2ff;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+        }
+
+        .list-item-detail {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Status Indicator */
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-critical { 
+            background: #ff006e;
+            box-shadow: 0 0 8px rgba(255, 0, 110, 0.6);
+        }
+
+        .status-warning { 
+            background: #ffc800;
+            box-shadow: 0 0 8px rgba(255, 200, 0, 0.6);
+        }
+
+        .status-success { 
+            background: #00f5ff;
+            box-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead th {
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 16px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .data-table tbody td {
+            padding: 20px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .data-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Upload Button */
+        .upload-button {
+            background: linear-gradient(135deg, rgba(155, 92, 255, 0.3) 0%, rgba(255, 0, 110, 0.2) 100%);
+            border: 1px solid rgba(155, 92, 255, 0.5);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(155, 92, 255, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .upload-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 32px rgba(155, 92, 255, 0.5),
+                0 0 24px rgba(155, 92, 255, 0.4);
+            border-color: rgba(155, 92, 255, 0.7);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 80px 32px;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--neon-purple);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .metric-tile:nth-child(1) { animation-delay: 0.1s; }
+        .metric-tile:nth-child(2) { animation-delay: 0.2s; }
+        .metric-tile:nth-child(3) { animation-delay: 0.3s; }
+        .metric-tile:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 32px;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            opacity: 0.6;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .empty-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 16px 0;
+            }
+            
+            .sidebar-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .canvas {
+                padding: 16px;
+            }
+            
+            .tile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef } = React;
+
+        const Dashboard = () => {
+            const [reportData, setReportData] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [activeTab, setActiveTab] = useState('overview');
+            const chartsRef = useRef({});
+
+            const handleFileUpload = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    setLoading(true);
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            setReportData(data);
+                            setLoading(false);
+                            setTimeout(() => renderCharts(data), 100);
+                        } catch (error) {
+                            alert('Error loading file. Please ensure it\'s a valid JSON report.');
+                            setLoading(false);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+
+            const renderCharts = (data) => {
+                // Status Chart
+                const statusCtx = document.getElementById('statusChart');
+                if (statusCtx && data.portfolio_summary) {
+                    if (chartsRef.current.status) chartsRef.current.status.destroy();
+                    chartsRef.current.status = new Chart(statusCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['On Track', 'At Risk', 'Critical'],
+                            datasets: [{
+                                data: [
+                                    data.portfolio_summary.status_distribution.on_track,
+                                    data.portfolio_summary.status_distribution.at_risk,
+                                    data.portfolio_summary.status_distribution.critical
+                                ],
+                                backgroundColor: ['#00f5ff', '#ffc800', '#ff006e'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '70%',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        color: '#b8a7d9',
+                                        font: { size: 12, weight: '600' },
+                                        padding: 16,
+                                        usePointStyle: true
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Health Chart
+                const healthCtx = document.getElementById('healthChart');
+                if (healthCtx && data.projects) {
+                    if (chartsRef.current.health) chartsRef.current.health.destroy();
+                    chartsRef.current.health = new Chart(healthCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.projects.map(p => p.name.substring(0, 15)),
+                            datasets: [{
+                                label: 'Score',
+                                data: data.projects.map(p => p.health.health_score),
+                                backgroundColor: data.projects.map(p =>
+                                    p.health.health_score >= 80 ? 'rgba(0, 245, 255, 0.6)' :
+                                    p.health.health_score >= 60 ? 'rgba(255, 200, 0, 0.6)' : 'rgba(255, 0, 110, 0.6)'
+                                ),
+                                borderRadius: 8,
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                                    ticks: { 
+                                        color: '#6b5a8e',
+                                        font: { size: 11, weight: '600' }
+                                    }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { 
+                                        color: '#6b5a8e',
+                                        font: { size: 11, weight: '600' }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+
+            const formatCurrency = (value) => {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(value);
+            };
+
+            if (loading) {
+                return (
+                    <div className="app-shell">
+                        <div className="sidebar">
+                            <div className="sidebar-icon active">📊</div>
+                        </div>
+                        <div className="main-content">
+                            <div className="canvas">
+                                <div className="loading">
+                                    <div className="loading-spinner"></div>
+                                    <div style={{fontSize: '16px', color: '#b8a7d9'}}>
+                                        Loading report data...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (!reportData) {
+                return (
+                    <div className="app-shell">
+                        <div className="sidebar">
+                            <div className="sidebar-icon active">📊</div>
+                            <div className="sidebar-icon">📁</div>
+                            <div className="sidebar-icon">⚙️</div>
+                        </div>
+                        <div className="main-content">
+                            <div className="top-bar">
+                                <input 
+                                    type="text" 
+                                    className="search-input" 
+                                    placeholder="Search..."
+                                />
+                                <div className="utility-actions">
+                                    <div className="utility-icon">🔔</div>
+                                    <div className="utility-icon">👤</div>
+                                </div>
+                            </div>
+                            <div className="canvas">
+                                <div className="empty-state">
+                                    <div className="empty-icon">📊</div>
+                                    <div className="empty-title">Load Report Data</div>
+                                    <div className="empty-text">
+                                        Upload your JSON report file to view portfolio analytics, 
+                                        health metrics, and AI-generated insights.
+                                    </div>
+                                    <label htmlFor="file-upload" className="upload-button">
+                                        <span>📁</span>
+                                        <span>Choose File</span>
+                                    </label>
+                                    <input
+                                        id="file-upload"
+                                        type="file"
+                                        accept=".json"
+                                        onChange={handleFileUpload}
+                                        style={{ display: 'none' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            const { portfolio_summary, portfolio_health, insights, projects } = reportData;
+
+            return (
+                <div className="app-shell">
+                    {/* Left Sidebar */}
+                    <div className="sidebar">
+                        <div className="sidebar-icon active">📊</div>
+                        <div className="sidebar-icon">📁</div>
+                        <div className="sidebar-icon">📈</div>
+                        <div className="sidebar-icon">⚠️</div>
+                        <div className="sidebar-icon">⚙️</div>
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="main-content">
+                        {/* Top Bar */}
+                        <div className="top-bar">
+                            <input 
+                                type="text" 
+                                className="search-input" 
+                                placeholder="Search projects, metrics..."
+                            />
+                            <div className="utility-actions">
+                                <div className="utility-icon">🔔</div>
+                                <div className="utility-icon">⭐</div>
+                                <div className="utility-icon">👤</div>
+                            </div>
+                        </div>
+
+                        {/* Canvas */}
+                        <div className="canvas">
+                            {/* Metric Tiles Grid */}
+                            <div className="tile-grid">
+                                <div className="metric-tile">
+                                    <div className="metric-label">Total Projects</div>
+                                    <div className="metric-value">{portfolio_summary.total_projects}</div>
+                                    <div className="metric-detail">
+                                        <span><span className="status-dot status-success"></span>{portfolio_summary.status_distribution.on_track} Active</span>
+                                        <span><span className="status-dot status-warning"></span>{portfolio_summary.status_distribution.at_risk} Alert</span>
+                                        <span><span className="status-dot status-critical"></span>{portfolio_summary.status_distribution.critical} Critical</span>
+                                    </div>
+                                </div>
+
+                                <div className="metric-tile">
+                                    <div className="metric-label">Budget Total</div>
+                                    <div className="metric-value">{formatCurrency(portfolio_summary.budget.total)}</div>
+                                    <div className="metric-detail">
+                                        {formatCurrency(portfolio_summary.budget.spent)} allocated • 
+                                        {portfolio_summary.budget.utilization_percentage.toFixed(1)}% used
+                                    </div>
+                                </div>
+
+                                <div className="metric-tile">
+                                    <div className="metric-label">Health Index</div>
+                                    <div className="metric-value">{portfolio_summary.average_health_score}</div>
+                                    <div className="metric-detail">
+                                        {portfolio_summary.average_completion.toFixed(0)}% completion rate
+                                    </div>
+                                </div>
+
+                                <div className="metric-tile">
+                                    <div className="metric-label">Active Alerts</div>
+                                    <div className="metric-value">{portfolio_summary.total_risks}</div>
+                                    <div className="metric-detail" style={{color: '#ff4d9f'}}>
+                                        {portfolio_summary.critical_risks} require action
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Info Tile + Charts */}
+                            <div className="tile-grid-2">
+                                <div>
+                                    <div className="info-tile" style={{marginBottom: '24px'}}>
+                                        <div className="info-title">Executive Summary</div>
+                                        <div className="info-text">
+                                            {insights.executive_summary}
+                                        </div>
+                                    </div>
+
+                                    <div className="chart-tile">
+                                        <div className="chart-header">
+                                            <div className="chart-title">Performance Metrics</div>
+                                            <div className="chart-tabs">
+                                                <div className={`chart-tab ${activeTab === 'overview' ? 'active' : ''}`} 
+                                                     onClick={() => setActiveTab('overview')}>
+                                                    Overview
+                                                </div>
+                                                <div className={`chart-tab ${activeTab === 'detail' ? 'active' : ''}`}
+                                                     onClick={() => setActiveTab('detail')}>
+                                                    Details
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="chart-container">
+                                            <canvas id="healthChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div className="progress-tile" style={{marginBottom: '24px'}}>
+                                        <div className="chart-container" style={{height: '200px'}}>
+                                            <canvas id="statusChart"></canvas>
+                                        </div>
+                                    </div>
+
+                                    <div className="list-tile">
+                                        <div className="list-header">
+                                            <span>⚠️</span>
+                                            <span>Key Alerts</span>
+                                        </div>
+                                        {insights.key_concerns.slice(0, 3).map((concern, idx) => (
+                                            <div key={idx} className="list-item">
+                                                <div className="list-item-header">
+                                                    <div className="list-item-title">{concern.concern}</div>
+                                                    <div className={`list-item-badge ${concern.severity === 'Critical' ? 'badge-critical' : 'badge-warning'}`}>
+                                                        {concern.severity}
+                                                    </div>
+                                                </div>
+                                                <div className="list-item-detail">
+                                                    {concern.details}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Recommendations */}
+                            <div className="list-tile">
+                                <div className="list-header">
+                                    <span>💡</span>
+                                    <span>Action Items</span>
+                                </div>
+                                {insights.recommendations.slice(0, 3).map((rec, idx) => (
+                                    <div key={idx} className="list-item">
+                                        <div className="list-item-header">
+                                            <div className="list-item-title">
+                                                Priority {rec.priority}: {rec.recommendation}
+                                            </div>
+                                            <div className="list-item-badge badge-success">
+                                                {rec.timeline}
+                                            </div>
+                                        </div>
+                                        <div className="list-item-detail">
+                                            {rec.rationale}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Data Table */}
+                            <div className="list-tile" style={{marginTop: '24px'}}>
+                                <div className="list-header">
+                                    <span>📁</span>
+                                    <span>Project Portfolio</span>
+                                </div>
+                                <table className="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Status</th>
+                                            <th>Health</th>
+                                            <th>Budget</th>
+                                            <th>Progress</th>
+                                            <th>Timeline</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {projects.map((project, idx) => (
+                                            <tr key={idx}>
+                                                <td>
+                                                    <div style={{fontWeight: '600'}}>{project.name}</div>
+                                                    <div style={{fontSize: '12px', color: '#6b5a8e'}}>{project.code}</div>
+                                                </td>
+                                                <td>
+                                                    <span className={`list-item-badge ${
+                                                        project.health.overall_status === 'Critical' ? 'badge-critical' :
+                                                        project.health.overall_status === 'At Risk' ? 'badge-warning' : 'badge-success'
+                                                    }`}>
+                                                        {project.health.overall_status}
+                                                    </span>
+                                                </td>
+                                                <td style={{fontWeight: '700', fontSize: '20px'}}>
+                                                    {project.health.health_score}
+                                                </td>
+                                                <td>
+                                                    <div>{formatCurrency(project.budget.spent)}</div>
+                                                    <div style={{fontSize: '12px', color: '#6b5a8e'}}>
+                                                        of {formatCurrency(project.budget.total)}
+                                                    </div>
+                                                </td>
+                                                <td style={{fontWeight: '600'}}>
+                                                    {project.schedule.percent_complete}%
+                                                </td>
+                                                <td>
+                                                    <span style={{color: project.schedule.variance_days < 0 ? '#ff4d9f' : '#66f2ff'}}>
+                                                        {project.schedule.variance_days >= 0 ? '+' : ''}{project.schedule.variance_days}d
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<Dashboard />, document.getElementById('root'));
+    </script>
+</body>
+</html>
