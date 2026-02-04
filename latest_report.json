@@ -1,0 +1,610 @@
+{
+  "metadata": {
+    "report_type": "Weekly Executive Portfolio Health Report",
+    "generated_at": "2026-01-15T14:55:54.974312",
+    "generated_by": "Claude Desktop Automation",
+    "reporting_period": "Week of January 15, 2026",
+    "data_source": "Clarity PPM"
+  },
+  "portfolio_summary": {
+    "average_completion": 68.4,
+    "average_health_score": 69.0,
+    "budget": {
+      "remaining": 615000,
+      "spent": 1905000,
+      "total": 2520000,
+      "utilization_percentage": 75.59523809523809
+    },
+    "critical_risks": 8,
+    "status_distribution": {
+      "at_risk": 2,
+      "critical": 1,
+      "on_track": 2
+    },
+    "total_projects": 5,
+    "total_risks": 22
+  },
+  "portfolio_health": {
+    "budget": {
+      "average_variance_percentage": -1.11,
+      "projects_over_budget": 3,
+      "total_variance": -25000
+    },
+    "schedule": {
+      "average_variance_days": -8.4,
+      "projects_behind": 3
+    },
+    "scope": {
+      "average_variance": 8.4,
+      "projects_with_variance": 3
+    }
+  },
+  "insights": {
+    "executive_summary": "Portfolio consists of 5 active projects with a combined budget of $2,520,000. \n        \nCurrent Status: 2 projects on track, 2 at risk, and 1 in critical status.\n\nOverall portfolio health score is 69/100 with average project completion at 68%.\n\nBudget: Portfolio has spent $1,905,000 (75.6% utilization) with 3 projects currently over budget.\n\nTimeline: Average schedule variance is -8.4 days with 3 projects behind schedule.\n\nScope: 3 projects showing significant scope variance (>5%), averaging 8.4% variance across portfolio.",
+    "key_concerns": [
+      {
+        "severity": "Critical",
+        "concern": "1 Critical Projects Requiring Immediate Attention",
+        "details": "Projects in critical status: Customer Portal Redesign",
+        "action": "Executive review and intervention required within 48 hours"
+      },
+      {
+        "severity": "High",
+        "concern": "2 Projects At Risk",
+        "details": "At-risk projects: Digital Transformation Initiative, Mobile App Development",
+        "action": "Enhanced monitoring and corrective action plans needed"
+      },
+      {
+        "severity": "High",
+        "concern": "Significant Budget Overruns",
+        "details": "2 projects with budget variance exceeding $10K",
+        "action": "Financial review and budget reforecast required"
+      }
+    ],
+    "scope_analysis": {
+      "summary": "2 projects with high scope variance (>10%)",
+      "total_scope_changes": 15,
+      "average_variance": 8.4,
+      "projects_with_issues": [
+        "Customer Portal Redesign",
+        "Mobile App Development"
+      ],
+      "recommendation": "Scope management is adequate"
+    },
+    "budget_analysis": {
+      "summary": "3 projects over budget with total variance of $-25,000",
+      "projects_over_budget": 3,
+      "total_variance": -25000,
+      "utilization": 75.59523809523809,
+      "projects_with_issues": [
+        "Digital Transformation Initiative",
+        "Customer Portal Redesign",
+        "Mobile App Development"
+      ],
+      "recommendation": "Immediate cost control measures needed"
+    },
+    "timeline_analysis": {
+      "summary": "3 projects significantly behind schedule (>5 days)",
+      "projects_behind": 3,
+      "average_variance_days": -8.4,
+      "projects_with_issues": [
+        "Digital Transformation Initiative",
+        "Customer Portal Redesign",
+        "Mobile App Development"
+      ],
+      "recommendation": "Resource reallocation assessment required"
+    },
+    "recommendations": [
+      {
+        "priority": 1,
+        "recommendation": "Emergency Portfolio Review",
+        "rationale": "1 projects in critical status requiring immediate executive intervention",
+        "actions": [
+          "Schedule emergency steering committee meeting within 48 hours",
+          "Develop recovery plans for each critical project",
+          "Assess resource reallocation options",
+          "Determine go/no-go decisions"
+        ],
+        "timeline": "Immediate (Within 48 hours)"
+      },
+      {
+        "priority": 2,
+        "recommendation": "Enhanced Project Monitoring",
+        "rationale": "2 at-risk projects need closer oversight",
+        "actions": [
+          "Increase reporting frequency to weekly",
+          "Assign executive sponsors to at-risk projects",
+          "Implement early warning indicators",
+          "Review and update risk mitigation plans"
+        ],
+        "timeline": "Within 1 week"
+      },
+      {
+        "priority": 3,
+        "recommendation": "Portfolio Budget Reforecast",
+        "rationale": "Multiple projects over budget indicating systemic estimation issues",
+        "actions": [
+          "Conduct comprehensive budget review",
+          "Update forecast-to-complete estimates",
+          "Identify potential funding gaps",
+          "Implement tighter cost controls"
+        ],
+        "timeline": "Within 2 weeks"
+      }
+    ],
+    "project_analyses": [
+      {
+        "project_id": "PRJ001",
+        "project_name": "Digital Transformation Initiative",
+        "overall_status": "At Risk",
+        "health_score": 65,
+        "dimensions": {
+          "scope": {
+            "status": "Yellow",
+            "variance_percentage": 6.7,
+            "assessment": "WARNING: Scope variance of 6.7% with 3 changes. Monitor closely to prevent further creep.",
+            "metrics": {
+              "total_items": 45,
+              "completed": 28,
+              "in_progress": 12,
+              "scope_changes": 3
+            }
+          },
+          "budget": {
+            "status": "Red",
+            "variance_percentage": -4.0,
+            "variance_amount": -30000,
+            "assessment": "WARNING: Project trending 4.0% over budget at 83.3% utilization.",
+            "metrics": {
+              "total": 750000,
+              "spent": 625000,
+              "remaining": 125000,
+              "utilization": 83.33333333333334
+            }
+          },
+          "timeline": {
+            "status": "Yellow",
+            "variance_days": -12,
+            "assessment": "WARNING: Project is 12 days behind with 68% complete.",
+            "metrics": {
+              "percent_complete": 68,
+              "planned_duration": 532,
+              "actual_duration": 544,
+              "milestones": "8/12"
+            }
+          }
+        }
+      },
+      {
+        "project_id": "PRJ002",
+        "project_name": "Cloud Migration Project",
+        "overall_status": "On Track",
+        "health_score": 88,
+        "dimensions": {
+          "scope": {
+            "status": "Green",
+            "variance_percentage": 3.1,
+            "assessment": "HEALTHY: Scope is well-controlled with only 3.1% variance.",
+            "metrics": {
+              "total_items": 32,
+              "completed": 23,
+              "in_progress": 7,
+              "scope_changes": 1
+            }
+          },
+          "budget": {
+            "status": "Green",
+            "variance_percentage": 3.3,
+            "variance_amount": 15000,
+            "assessment": "HEALTHY: Budget on track with 3.3% positive variance.",
+            "metrics": {
+              "total": 450000,
+              "spent": 280000,
+              "remaining": 170000,
+              "utilization": 62.22222222222222
+            }
+          },
+          "timeline": {
+            "status": "Green",
+            "variance_days": 3,
+            "assessment": "ON TRACK: Project is on schedule with 72% completion.",
+            "metrics": {
+              "percent_complete": 72,
+              "planned_duration": 365,
+              "actual_duration": 362,
+              "milestones": "6/8"
+            }
+          }
+        }
+      },
+      {
+        "project_id": "PRJ003",
+        "project_name": "Customer Portal Redesign",
+        "overall_status": "Critical",
+        "health_score": 42,
+        "dimensions": {
+          "scope": {
+            "status": "Red",
+            "variance_percentage": 17.9,
+            "assessment": "CRITICAL: Scope has grown 17.9% with 5 change requests. Significant scope creep detected.",
+            "metrics": {
+              "total_items": 28,
+              "completed": 22,
+              "in_progress": 4,
+              "scope_changes": 5
+            }
+          },
+          "budget": {
+            "status": "Red",
+            "variance_percentage": -6.25,
+            "variance_amount": -20000,
+            "assessment": "CRITICAL: Project is 6.2% over budget. Immediate cost control required.",
+            "metrics": {
+              "total": 320000,
+              "spent": 305000,
+              "remaining": 15000,
+              "utilization": 95.3125
+            }
+          },
+          "timeline": {
+            "status": "Red",
+            "variance_days": -25,
+            "assessment": "CRITICAL: Project is 25 days behind schedule at 85% completion.",
+            "metrics": {
+              "percent_complete": 85,
+              "planned_duration": 303,
+              "actual_duration": 328,
+              "milestones": "8/10"
+            }
+          }
+        }
+      },
+      {
+        "project_id": "PRJ004",
+        "project_name": "Data Warehouse Modernization",
+        "overall_status": "On Track",
+        "health_score": 92,
+        "dimensions": {
+          "scope": {
+            "status": "Green",
+            "variance_percentage": 3.8,
+            "assessment": "HEALTHY: Scope is well-controlled with only 3.8% variance.",
+            "metrics": {
+              "total_items": 52,
+              "completed": 28,
+              "in_progress": 18,
+              "scope_changes": 2
+            }
+          },
+          "budget": {
+            "status": "Green",
+            "variance_percentage": 2.6,
+            "variance_amount": 15000,
+            "assessment": "HEALTHY: Budget on track with 2.6% positive variance.",
+            "metrics": {
+              "total": 580000,
+              "spent": 385000,
+              "remaining": 195000,
+              "utilization": 66.37931034482759
+            }
+          },
+          "timeline": {
+            "status": "Green",
+            "variance_days": 0,
+            "assessment": "ON TRACK: Project is on schedule with 55% completion.",
+            "metrics": {
+              "percent_complete": 55,
+              "planned_duration": 488,
+              "actual_duration": 488,
+              "milestones": "8/15"
+            }
+          }
+        }
+      },
+      {
+        "project_id": "PRJ005",
+        "project_name": "Mobile App Development",
+        "overall_status": "At Risk",
+        "health_score": 58,
+        "dimensions": {
+          "scope": {
+            "status": "Yellow",
+            "variance_percentage": 10.5,
+            "assessment": "WARNING: Scope variance of 10.5% with 4 changes. Monitor closely to prevent further creep.",
+            "metrics": {
+              "total_items": 38,
+              "completed": 23,
+              "in_progress": 11,
+              "scope_changes": 4
+            }
+          },
+          "budget": {
+            "status": "Yellow",
+            "variance_percentage": -1.2,
+            "variance_amount": -5000,
+            "assessment": "WARNING: Project trending 1.2% over budget at 73.8% utilization.",
+            "metrics": {
+              "total": 420000,
+              "spent": 310000,
+              "remaining": 110000,
+              "utilization": 73.80952380952381
+            }
+          },
+          "timeline": {
+            "status": "Yellow",
+            "variance_days": -8,
+            "assessment": "WARNING: Project is 8 days behind with 62% complete.",
+            "metrics": {
+              "percent_complete": 62,
+              "planned_duration": 304,
+              "actual_duration": 312,
+              "milestones": "5/9"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "projects": [
+    {
+      "budget": {
+        "remaining": 125000,
+        "spent": 625000,
+        "total": 750000,
+        "variance": -30000,
+        "variance_percentage": -4.0
+      },
+      "code": "DTI-2024",
+      "current_end_date": "2025-07-12",
+      "department": "IT",
+      "health": {
+        "budget_status": "Red",
+        "health_score": 65,
+        "overall_status": "At Risk",
+        "schedule_status": "Yellow",
+        "scope_status": "Yellow"
+      },
+      "id": "PRJ001",
+      "manager": "John Smith",
+      "name": "Digital Transformation Initiative",
+      "planned_end_date": "2025-06-30",
+      "priority": "High",
+      "risks": {
+        "critical": 2,
+        "high": 1,
+        "low": 1,
+        "medium": 1,
+        "total": 5
+      },
+      "schedule": {
+        "actual_duration_days": 544,
+        "milestone_completion": "8/12",
+        "percent_complete": 68,
+        "planned_duration_days": 532,
+        "variance_days": -12
+      },
+      "scope": {
+        "completed_items": 28,
+        "in_progress_items": 12,
+        "original_scope_items": 45,
+        "pending_items": 5,
+        "scope_changes": 3,
+        "scope_variance_percentage": 6.7
+      },
+      "sponsor": "Sarah Williams",
+      "start_date": "2024-01-15",
+      "team": {
+        "size": 15,
+        "utilization": 85
+      }
+    },
+    {
+      "budget": {
+        "remaining": 170000,
+        "spent": 280000,
+        "total": 450000,
+        "variance": 15000,
+        "variance_percentage": 3.3
+      },
+      "code": "CMP-2024",
+      "current_end_date": "2025-03-28",
+      "department": "Infrastructure",
+      "health": {
+        "budget_status": "Green",
+        "health_score": 88,
+        "overall_status": "On Track",
+        "schedule_status": "Green",
+        "scope_status": "Green"
+      },
+      "id": "PRJ002",
+      "manager": "Michael Chen",
+      "name": "Cloud Migration Project",
+      "planned_end_date": "2025-03-31",
+      "priority": "High",
+      "risks": {
+        "critical": 0,
+        "high": 0,
+        "low": 1,
+        "medium": 1,
+        "total": 2
+      },
+      "schedule": {
+        "actual_duration_days": 362,
+        "milestone_completion": "6/8",
+        "percent_complete": 72,
+        "planned_duration_days": 365,
+        "variance_days": 3
+      },
+      "scope": {
+        "completed_items": 23,
+        "in_progress_items": 7,
+        "original_scope_items": 32,
+        "pending_items": 2,
+        "scope_changes": 1,
+        "scope_variance_percentage": 3.1
+      },
+      "sponsor": "David Brown",
+      "start_date": "2024-03-01",
+      "team": {
+        "size": 12,
+        "utilization": 78
+      }
+    },
+    {
+      "budget": {
+        "remaining": 15000,
+        "spent": 305000,
+        "total": 320000,
+        "variance": -20000,
+        "variance_percentage": -6.25
+      },
+      "code": "CPR-2024",
+      "current_end_date": "2024-12-25",
+      "department": "Marketing",
+      "health": {
+        "budget_status": "Red",
+        "health_score": 42,
+        "overall_status": "Critical",
+        "schedule_status": "Red",
+        "scope_status": "Red"
+      },
+      "id": "PRJ003",
+      "manager": "Emily Rodriguez",
+      "name": "Customer Portal Redesign",
+      "planned_end_date": "2024-11-30",
+      "priority": "Critical",
+      "risks": {
+        "critical": 4,
+        "high": 2,
+        "low": 1,
+        "medium": 1,
+        "total": 8
+      },
+      "schedule": {
+        "actual_duration_days": 328,
+        "milestone_completion": "8/10",
+        "percent_complete": 85,
+        "planned_duration_days": 303,
+        "variance_days": -25
+      },
+      "scope": {
+        "completed_items": 22,
+        "in_progress_items": 4,
+        "original_scope_items": 28,
+        "pending_items": 7,
+        "scope_changes": 5,
+        "scope_variance_percentage": 17.9
+      },
+      "sponsor": "Robert Taylor",
+      "start_date": "2024-02-01",
+      "team": {
+        "size": 10,
+        "utilization": 95
+      }
+    },
+    {
+      "budget": {
+        "remaining": 195000,
+        "spent": 385000,
+        "total": 580000,
+        "variance": 15000,
+        "variance_percentage": 2.6
+      },
+      "code": "DWM-2024",
+      "current_end_date": "2025-08-15",
+      "department": "Data Analytics",
+      "health": {
+        "budget_status": "Green",
+        "health_score": 92,
+        "overall_status": "On Track",
+        "schedule_status": "Green",
+        "scope_status": "Green"
+      },
+      "id": "PRJ004",
+      "manager": "James Wilson",
+      "name": "Data Warehouse Modernization",
+      "planned_end_date": "2025-08-15",
+      "priority": "Medium",
+      "risks": {
+        "critical": 1,
+        "high": 0,
+        "low": 1,
+        "medium": 1,
+        "total": 3
+      },
+      "schedule": {
+        "actual_duration_days": 488,
+        "milestone_completion": "8/15",
+        "percent_complete": 55,
+        "planned_duration_days": 488,
+        "variance_days": 0
+      },
+      "scope": {
+        "completed_items": 28,
+        "in_progress_items": 18,
+        "original_scope_items": 52,
+        "pending_items": 6,
+        "scope_changes": 2,
+        "scope_variance_percentage": 3.8
+      },
+      "sponsor": "Linda Martinez",
+      "start_date": "2024-04-15",
+      "team": {
+        "size": 18,
+        "utilization": 68
+      }
+    },
+    {
+      "budget": {
+        "remaining": 110000,
+        "spent": 310000,
+        "total": 420000,
+        "variance": -5000,
+        "variance_percentage": -1.2
+      },
+      "code": "MAD-2024",
+      "current_end_date": "2025-03-08",
+      "department": "Product",
+      "health": {
+        "budget_status": "Yellow",
+        "health_score": 58,
+        "overall_status": "At Risk",
+        "schedule_status": "Yellow",
+        "scope_status": "Yellow"
+      },
+      "id": "PRJ005",
+      "manager": "Amanda Lee",
+      "name": "Mobile App Development",
+      "planned_end_date": "2025-02-28",
+      "priority": "High",
+      "risks": {
+        "critical": 1,
+        "high": 1,
+        "low": 1,
+        "medium": 1,
+        "total": 4
+      },
+      "schedule": {
+        "actual_duration_days": 312,
+        "milestone_completion": "5/9",
+        "percent_complete": 62,
+        "planned_duration_days": 304,
+        "variance_days": -8
+      },
+      "scope": {
+        "completed_items": 23,
+        "in_progress_items": 11,
+        "original_scope_items": 38,
+        "pending_items": 8,
+        "scope_changes": 4,
+        "scope_variance_percentage": 10.5
+      },
+      "sponsor": "Thomas Anderson",
+      "start_date": "2024-05-01",
+      "team": {
+        "size": 14,
+        "utilization": 82
+      }
+    }
+  ]
+}
